@@ -4,7 +4,6 @@ use ExtUtils::MakeMaker;
 
 use lib 'inc';
 use Inline::Module;
-BEGIN { *Inline::Module::included_modules = sub { [] } } ## don't bundle in 100s of KBs of modules.. use build-time deps instead
 
 my %args = (
     NAME => 'Unicode::Truncate',
@@ -12,8 +11,8 @@ my %args = (
     PREREQ_PM => {
     },
     BUILD_REQUIRES => {
-      'Inline::C' => 0,
-      'Inline::Module' => 0,
+      'Inline::Module' => '0.32',
+      'Inline::C' => '0.71',
       'Inline::Filters::Ragel' => 0, ## unfortunately... (requires ragel binary to be installed)
     },
     LIBS => [],
@@ -28,13 +27,22 @@ my %args = (
         stub => 'Unicode::Truncate::Inline',
         ilsm => 'Inline::C',
         makestub => 1,
+        bundle => 0,
       },
     },
     META_MERGE => {
-        resources => {
-            repository => 'git://github.com/hoytech/Unicode-Truncate.git',
-            bugtracker => 'https://github.com/hoytech/Unicode-Truncate/issues',
+      resources => {
+        repository => 'git://github.com/hoytech/Unicode-Truncate.git',
+        bugtracker => 'https://github.com/hoytech/Unicode-Truncate/issues',
+      },
+      prereqs     => {
+        develop => {
+          requires => {
+            'Inline::C' => '0.71',
+            'Inline::Module' => '0.32',
+          },
         },
+      },
     },
 );
 

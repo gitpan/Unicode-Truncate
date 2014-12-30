@@ -47,10 +47,10 @@ RATIONALE
     capacity limits. Many data-bases, network protocols, and file-formats
     require honouring byte-length restrictions. Even if they automatically
     truncate for you, are they doing it properly and consistently? On many
-    file-systems if you use UTF-8 in path names you are subject to a
-    byte-size limit. Many APIs that use C structs have fixed limits as well.
-    You may even wish to do things like guarantee that a collection of news
-    headlines will fit in a single ethernet packet.
+    file-systems, file and directory names are subject to byte-size limits.
+    Many APIs that use C structs have fixed limits as well. You may even
+    wish to do things like guarantee that a collection of news headlines
+    will fit in a single ethernet packet.
 
     One interesting aspect of unicode's combining marks is that there is no
     specified limit to the number of combining marks that can be applied. So
@@ -59,7 +59,7 @@ RATIONALE
     there are various recommendations such as the unicode standard UAX15-D3
     <http://www.unicode.org/reports/tr15/#UAX15-D3> "stream-safe" limit of
     30. Reportedly the largest known "legitimate" use is a 1 base + 8
-    combining marks grapheme used in a tibetan script.
+    combining marks grapheme used in a Tibetan script.
 
 ELLIPSIS
     When a string is truncated, "truncate_utf8" indicates this by appending
@@ -104,14 +104,27 @@ SEE ALSO
     valid UTF-8, but will still risk corrupting unicode text that contains
     combining marks.
 
+    Ricardo Signes described a very correct but inefficient algorithm: use
+    Unicode::GCString and strip off extended grapheme clusters from the end
+    (or add one-by-one from the start) until the length of the UTF-8 encoded
+    string exceeds your byte-limit.
+
 BUGS
-    Of course I haven't tested this on all the writing systems of the world
-    so I don't know the severity of the corruption in all situations. It's
-    possible that the corruption can be minimised in additional ways without
-    sacrificing the simplicity or efficiency of the algorithm. One obvious
-    improvement for languages that use white-space is to chop off the last
-    (potentially partial) word up to the next whitespace block: "s/\S+$//"
-    (note you'll have to worry about the ellipsis yourself in this case).
+    This module currently only implements a sub-set of unicode's grapheme
+    cluster boundary rules
+    <http://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries>.
+    Eventually I plan to extend this so the module "does the right thing" in
+    more cases. Of course I can't test this on all the writing systems of
+    the world so I don't know the severity of the corruption in all
+    situations. It's possible that the corruption can be minimised in
+    additional ways without sacrificing the simplicity or efficiency of the
+    algorithm. If you have any ideas please let me know and I'll try to
+    incorporate them.
+
+    One obvious enhancement for languages that use white-space is to chop
+    off the last (potentially partial) word up to the next whitespace block:
+    "s/\S+$//" (note you'll have to worry about the ellipsis yourself in
+    this case).
 
     Currently building this module requires Inline::Filters::Ragel to be
     installed. I'd like to add an option to Inline::Module that has ragel
