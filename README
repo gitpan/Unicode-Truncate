@@ -39,7 +39,7 @@ RATIONALE
 
     I knew I had to write this module after I asked Tom Christiansen about
     the best way to truncate unicode to fit in fixed-byte fields and he got
-    angry at me and told me to never do that. :)
+    angry and told me to never do that. :)
 
     Of course in a perfect world we would only need to worry about the
     amount of space some text takes up on the screen, in the real world we
@@ -104,10 +104,11 @@ SEE ALSO
     valid UTF-8, but will still risk corrupting unicode text that contains
     combining marks.
 
-    Ricardo Signes described a very correct but inefficient algorithm: use
-    Unicode::GCString and strip off extended grapheme clusters from the end
-    (or add one-by-one from the start) until the length of the UTF-8 encoded
-    string exceeds your byte-limit.
+    Ricardo Signes suggested an algorithm using Unicode::GCString which
+    would be very correct but likely less efficient.
+
+    It may be possible to use the regexp engine's "\X" combined with "(?{})
+    in some way but I haven't been able to figure that out."
 
 BUGS
     This module currently only implements a sub-set of unicode's grapheme
@@ -143,4 +144,11 @@ COPYRIGHT & LICENSE
     Copyright 2014 Doug Hoyte.
 
     This module is licensed under the same terms as perl itself.
+
+POD ERRORS
+    Hey! The above document had some coding errors, which are explained
+    below:
+
+    Around line 201:
+        Unterminated C<...> sequence
 
